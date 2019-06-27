@@ -2,19 +2,58 @@ package uk.ac.warwick;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.jsoup.nodes.Document;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import javax.sql.DataSource;
+import java.io.IOException;
 import java.text.ParseException;
-import java.util.Iterator;
+import java.util.*;
 
 import static uk.ac.warwick.DBUtils.getDataSource;
 
 public class Main {
     public static void main(String[] args) {
         DataSource dataSource = getDataSource();
+        int year = 2018;
         NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-        fetchNewsList(namedParameterJdbcTemplate, 2015);
+        updateDatabaseHtml(namedParameterJdbcTemplate, year);
+    }
+
+    private static void updateDatabaseHtml(NamedParameterJdbcTemplate namedParameterJdbcTemplate, int year){
+        List<Map<String, Object>> newsList = fetchNewsFromDatabase(namedParameterJdbcTemplate, year);
+        int n = newsList.size();
+        int i = 0;
+
+        for(Map map: newsList){
+            System.out.println((++i)+"/"+n);
+            UUID id = (UUID)map.get("id");
+            String url = (String)map.get("url");
+            try {
+                Document doc = FetchNews.getDoc(url);
+                String html = FetchNews.getHtml(doc);
+                updateNewsHtml(namedParameterJdbcTemplate, id, html);
+            } catch (IOException e) {
+                System.out.println("ERROR: ["+year+"], "+id);
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private static int updateNewsHtml(NamedParameterJdbcTemplate namedParameterJdbcTemplate, UUID id, String html){
+        String sql = "UPDATE AppleDaily SET html=:html WHERE id = :id";
+        HashMap<String, Object> map = new HashMap();
+        map.put("id", id);
+        map.put("html", html);
+        return namedParameterJdbcTemplate.update(sql, map);
+    }
+
+    private static List<Map<String, Object>> fetchNewsFromDatabase(NamedParameterJdbcTemplate namedParameterJdbcTemplate, int year){
+        String sql = "select id, url from appledaily\n" +
+                "WHERE timestamp >= '"+year+"-01-01'\n" +
+                "AND timestamp < '"+year+"-12-31'";
+        Map<String, News> map = new HashMap();
+        return namedParameterJdbcTemplate.queryForList(sql, map);
     }
 
     private static void fetchNewsList(NamedParameterJdbcTemplate namedParameterJdbcTemplate, int year){
