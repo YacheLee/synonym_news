@@ -3,6 +3,7 @@ package uk.ac.warwick;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.YearMonth;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -17,5 +18,15 @@ public class DateUtils {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyymmdd");
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Taipei"));
         return simpleDateFormat;
+    }
+
+    public static String getStartDate(int year, int month){
+        return year+"/"+month+"/"+1;
+    }
+
+    public static String getEndDate(int year, int month){
+        YearMonth yearMonthObject = YearMonth.of(year, month);
+        int endOfDayOfMonth = yearMonthObject.lengthOfMonth();
+        return year+"/"+month+"/"+endOfDayOfMonth;
     }
 }
