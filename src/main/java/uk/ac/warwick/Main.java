@@ -51,7 +51,8 @@ public class Main {
     private static List<Map<String, Object>> fetchNewsFromDatabase(NamedParameterJdbcTemplate namedParameterJdbcTemplate, int year){
         String sql = "select id, url from appledaily\n" +
                 "WHERE timestamp >= '"+year+"-01-01'\n" +
-                "AND timestamp < '"+year+"-12-31'";
+                "AND timestamp < '"+year+"-12-31'\n" +
+                "AND html IS NULL";
         Map<String, News> map = new HashMap();
         return namedParameterJdbcTemplate.queryForList(sql, map);
     }
