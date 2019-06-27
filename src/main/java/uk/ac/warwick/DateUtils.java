@@ -24,9 +24,8 @@ public class DateUtils {
         return year+"/"+month+"/"+1;
     }
 
-    public static String getEndDate(int year, int month){
+    public static int getEndDateOfMonth(int year, int month){
         YearMonth yearMonthObject = YearMonth.of(year, month);
-        int endOfDayOfMonth = yearMonthObject.lengthOfMonth();
-        return year+"/"+month+"/"+endOfDayOfMonth;
+        return yearMonthObject.lengthOfMonth();
     }
 }

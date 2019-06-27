@@ -13,9 +13,7 @@ public class DBUtils {
     final static String user = "postgres";
     final static String password = "postgres*";
 
-    public static int[] insertNews(DataSource dataSource, News[] newsList) {
-        NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-
+    public static int[] insertNews(NamedParameterJdbcTemplate namedParameterJdbcTemplate, News[] newsList) {
         String sql = "INSERT INTO AppleDaily (id, timestamp, url, html, text, title) VALUES (:id, :timestamp, :url, :html, :text, :title)";
         int n = newsList.length;
         Map[] maps = new Map[n];
