@@ -14,8 +14,10 @@ public class Main {
     public static void main(String[] args) {
         DataSource dataSource = getDataSource();
         NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+        fetchNewsList(namedParameterJdbcTemplate, 2015);
+    }
 
-        int year = 2017;
+    private static void fetchNewsList(NamedParameterJdbcTemplate namedParameterJdbcTemplate, int year){
         for (int month = 1; month <= 12; month++) {
             fetchNewsList(namedParameterJdbcTemplate, year, month);
         }
