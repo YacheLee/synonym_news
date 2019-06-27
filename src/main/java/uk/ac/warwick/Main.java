@@ -15,8 +15,8 @@ public class Main {
         DataSource dataSource = getDataSource();
         NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 
-        int year = 2018;
-        for (int month = 2; month <= 12; month++) {
+        int year = 2017;
+        for (int month = 1; month <= 12; month++) {
             fetchNewsList(namedParameterJdbcTemplate, year, month);
         }
     }
@@ -25,7 +25,7 @@ public class Main {
         for (int day = 1; day <= DateUtils.getEndDateOfMonth(year, month); day++) {
             for (int page = 1; ; page++) {
                 try {
-                    System.out.println("[" + year + "," + month + ", " + day + ", " + page + "]...");
+                    System.out.println("[" + year + ", " + month + ", " + day + ", " + page + "]...");
                     ArrayNode newsList = FetchNewsList.get(year + "/" + month + "/" + day, page);
                     if (newsList.size() == 0) {
                         System.out.println("The size of page " + page + " is zero");
@@ -33,7 +33,7 @@ public class Main {
                     }
                     insertNewsList(namedParameterJdbcTemplate, newsList);
                 } catch (Exception ex) {
-                    System.out.println("[" + year + "," + month + ", " + day + " , " + page + "] doesn't work well...");
+                    System.out.println("[" + year + ", " + month + ", " + day + " , " + page + "] doesn't work well...");
                     System.out.println(ex);
                 }
             }
