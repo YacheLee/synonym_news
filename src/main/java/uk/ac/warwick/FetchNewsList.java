@@ -1,19 +1,17 @@
 package uk.ac.warwick;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-public class FetchUrlList {
-    public static void main(String[] args){
+public class FetchNewsList {
+    public static ArrayNode get(int year, int month, int page){
         RestTemplate restTemplate = new RestTemplate();
-        String url = getUrlBase(1, 2018, 1).build().toString();
-        ResponseEntity<ArrayNode> forEntity = restTemplate.getForEntity(url, ArrayNode.class);
-        System.out.println(forEntity.getBody());
+        String url = getUrlBase(year, month, page).build().toString();
+        return restTemplate.getForEntity(url, ArrayNode.class).getBody();
     }
 
-    private static UriComponentsBuilder getUrlBase(int page, int year, int month) {
+    private static UriComponentsBuilder getUrlBase(int year, int month, int page) {
         String APPLE_DAILY_URL = "https://tw.appledaily.com/search/ajaxresult";
         String monthStr = month <10 ? "0"+month: String.valueOf(month);
         String date = year+"/"+month+"/"+monthStr;
