@@ -6,7 +6,7 @@ import javax.sql.DataSource;
 
 import static uk.ac.warwick.DBUtils.getDataSource;
 
-public class Main {
+public class _2018 {
     public static void main(String[] args) {
         DataSource dataSource = getDataSource();
         NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
