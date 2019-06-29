@@ -15,7 +15,8 @@ public class FetchNews {
         return document.body().html();
     }
 
-    public static String getText(Document doc){
+    public static String getText(String html){
+        Document doc = Jsoup.parse(html);
         Elements select = doc.select(".ndArticle_contentBox .ndArticle_margin");
         Elements iframe = select.select("iframe");
         iframe.nextAll().remove();

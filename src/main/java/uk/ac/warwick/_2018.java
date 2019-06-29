@@ -11,7 +11,13 @@ public class _2018 {
         DataSource dataSource = getDataSource();
         NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
         int year = 2018;
-        UpdateNewsHtml updateNewsHtml = new UpdateNewsHtml(namedParameterJdbcTemplate, year);
-        updateNewsHtml.updateDatabaseHtml();
+        int limit = 100;
+        int n = UpdateNewsText.count(namedParameterJdbcTemplate, year);
+
+        for (int offset = 0; offset < n; offset+=limit) {
+            System.out.println("【"+offset+"/"+n+"】");
+            UpdateNewsText updateNewsText = new UpdateNewsText(namedParameterJdbcTemplate, year, limit, offset);
+            updateNewsText.updateDatabaseText();
+        }
     }
 }
