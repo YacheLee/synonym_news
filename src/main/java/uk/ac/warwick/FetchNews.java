@@ -2,6 +2,7 @@ package uk.ac.warwick;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
@@ -18,9 +19,12 @@ public class FetchNews {
     public static String getText(String html){
         Document doc = Jsoup.parse(html);
         Elements select = doc.select(".ndArticle_contentBox .ndArticle_margin");
-        Elements iframe = select.select("iframe");
-        iframe.nextAll().remove();
-        iframe.remove();
+        Element iframe = select.select("iframe").first();
+        if(iframe!=null){
+            Elements iframeNextAll = iframe.nextElementSiblings();
+            iframeNextAll.remove();
+            iframe.remove();
+        }
 
         select = doc.select(".ndArticle_contentBox .ndArticle_margin p");
         return select.text();
