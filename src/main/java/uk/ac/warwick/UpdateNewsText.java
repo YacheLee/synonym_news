@@ -2,11 +2,13 @@ package uk.ac.warwick;
 
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
+import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import static uk.ac.warwick.DBUtils.getDataSource;
 import static uk.ac.warwick.FetchNews.getText;
 
 public class UpdateNewsText {
@@ -69,5 +71,18 @@ public class UpdateNewsText {
                 "AND text IS NULL";
         Map<String, News> map = new HashMap();
         return Integer.parseInt(namedParameterJdbcTemplate.queryForList(sql, map).get(0).get("count").toString());
+    }
+
+    public static void execute(int year){
+        DataSource dataSource = getDataSource();
+        NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+        int limit = 100;
+        int n = UpdateNewsText.count(namedParameterJdbcTemplate, year);
+
+        for (int offset = 0; offset <= n; offset+=limit) {
+            System.out.println("【"+offset+"/"+n+"】");
+            UpdateNewsText updateNewsText = new UpdateNewsText(namedParameterJdbcTemplate, year, limit, offset);
+            updateNewsText.updateDatabaseText();
+        }
     }
 }
