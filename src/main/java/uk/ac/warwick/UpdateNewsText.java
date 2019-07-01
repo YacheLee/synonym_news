@@ -28,7 +28,6 @@ public class UpdateNewsText {
         int n = newsList.size();
 
         newsList.parallelStream().forEach(map->{
-            System.out.println("["+year+"] "+(++this.i)+"/"+n);
             UUID id = (UUID)map.get("id");
             String html = (String) map.get("html");
             try{
@@ -42,11 +41,14 @@ public class UpdateNewsText {
     }
 
     private int updateNewsText(NamedParameterJdbcTemplate namedParameterJdbcTemplate, UUID id, String text){
-        String sql = "UPDATE AppleDaily SET text=:text WHERE id = :id";
-        HashMap<String, Object> map = new HashMap();
-        map.put("id", id);
-        map.put("text", text);
-        return namedParameterJdbcTemplate.update(sql, map);
+        if(text!=null){
+            String sql = "UPDATE AppleDaily SET text=:text WHERE id = :id";
+            HashMap<String, Object> map = new HashMap();
+            map.put("id", id);
+            map.put("text", text);
+            return namedParameterJdbcTemplate.update(sql, map);
+        }
+        return 0;
     }
 
     private List<Map<String, Object>> fetchNewsFromDatabase(NamedParameterJdbcTemplate namedParameterJdbcTemplate, int year, int limit, int offset){
